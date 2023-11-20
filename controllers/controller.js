@@ -11,7 +11,6 @@ exports.getTopics = (req,res,next) => {
 
 exports.getEndpoints = (req,res,next) => {
     fetchEndpoints().then((endpoints) => {
-        console.log(endpoints);
         res.status(200).send(endpoints);
     })
     .catch((err) => {
