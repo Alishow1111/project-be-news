@@ -3,7 +3,6 @@ exports.handlePsqlErrors = (err, req, res, next) => {
     //   res.ifs(40tatus0).send({ msg: 'Bad request' });
     // } else next(err);
 
-    console.log(err);
 
     if (err.code){
         res.status(400).send({ msg: 'Invalid Param' });
