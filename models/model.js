@@ -12,7 +12,4 @@ exports.fetchEndpoints = () => {
         const endpointObject = JSON.parse(result);
         return endpointObject;
     })
-    .catch((err) => {
-        console.log("error");
-    })
 }
