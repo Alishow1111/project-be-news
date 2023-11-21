@@ -131,3 +131,36 @@ describe("/api/articles", () => {
         });
     });
 })
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("POST 201: Inserts new comment with specified article_id", () => {
+    const newMessage = {
+      username: 'butter_bridge', 
+      body: 'Great Article!'
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newMessage)
+    .expect(201)
+    .then((response) => {
+      expect(response.body.comment).toMatchObject({
+        comment_id: 19, 
+        body: 'Great Article!', 
+        article_id: 1, 
+        author: 'butter_bridge',
+        votes: 0 
+      })
+    })
+  })
+
+  test("POST 400: No body given", () => {
+    const newMessage = {}
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newMessage)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('no request body')
+    })
+  })
+})
