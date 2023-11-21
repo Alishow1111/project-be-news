@@ -1,5 +1,7 @@
-const {fetchTopics, fetchEndpoints, fetchArticleById, fetchCommentsByArticleId} = require("../models/model.js");
+
+const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId} = require("../models/model.js");
 const {checkExists} = require('./utils.js');
+
 
 exports.getTopics = (req,res,next) => {
     fetchTopics().then((topics) => {
@@ -29,6 +31,7 @@ exports.getArticleById = (req,res,next) => {
     });
 }
 
+
 exports.getCommentsByArticleId = (req,res,next) => {
     const article_id = req.params.article_id;
 
@@ -38,4 +41,14 @@ exports.getCommentsByArticleId = (req,res,next) => {
         res.status(200).send({comments})
     })
     .catch(next)
+}
+
+exports.getArticles = (req,res,next) => {
+    fetchArticles().then((articles) => {
+        res.status(200).send({articles});
+    })
+    .catch((err) => {
+        next(err);
+    })
+
 }
