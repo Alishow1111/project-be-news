@@ -101,3 +101,47 @@ describe("/api/articles/:article_id", () => {
           });
     });
 });
+
+describe("/api/articles/:article_id/comments", () => {
+  test("GET 200: sends the comments with the specfied article_id", () => {
+    return request(app)
+    .get("/api/articles/5/comments")
+    .expect(200)
+    .then((response) => {
+      expect(response.body.comments).toMatchObject([{
+        body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
+        votes: 16,
+        author: "icellusedkars",
+        article_id: 5,
+        created_at: "2020-06-09T05:00:00.000Z",
+      },
+      {
+        body: "I am 100% sure that we're not completely sure.",
+        votes: 1,
+        author: "butter_bridge",
+        article_id: 5,
+        created_at: "2020-11-24T00:08:00.000Z",
+      }])
+    })
+  });
+
+  test("If article_id exists, but has no comments, expect an empty array returned back", () => {
+    return request(app)
+    .get("/api/articles/8/comments")
+    .expect(200)
+    .then((response) => {
+      expect(response.body.comments).toEqual([]);
+   })
+  });
+
+  test("If article_id doesn't exist, expect not found returned back", () => {
+    return request(app)
+    .get("/api/articles/20/comments")
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found');
+   })
+  });
+
+
+})
