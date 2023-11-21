@@ -58,6 +58,46 @@ describe("/api", () => {
                 const endpointObject = JSON.parse(result);
                 expect(response.body.endpoints_info).toEqual(endpointObject);
             })
+        });
+    });
+});
+
+
+describe("/api/articles/:article_id", () => {
+    test("GET: 200 sends the article with the specified aritle_id", () => {
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response) => {
+            expect(response.body.article).toMatchObject({
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: "2020-07-09T20:11:00.000Z",
+                votes: 100,
+                article_img_url:
+                  "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            })
+        })
+    });
+
+    test("GET 404: given a valid article_id that doesnt exist ", () => {
+        return request(app)
+          .get("/api/articles/700")
+          .expect(404)
+          .then((response) => {
+            expect(response.body.msg).toBe("article_id doesnt exist");
           });
-      });
-})
+    });
+
+    test("GET 400: given a invalid param for article_id", () => {
+        return request(app)
+          .get("/api/articles/hello")
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe("Invalid Param");
+          });
+    });
+});
