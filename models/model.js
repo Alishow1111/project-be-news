@@ -38,6 +38,12 @@ exports.fetchArticles = () => {
     })
 }
 
+exports.fetchCommentsByArticleId = (article_id) => {
+    return db.query("SELECT * FROM comments WHERE article_id = $1", [article_id]).then((result) => {
+        return result.rows;
+    })
+}
+
 exports.insertComment = (article_id, commentData) => {
     const currentDate = new Date(Date.now());
     const dataArray = [commentData.body, article_id, commentData.username, 0, currentDate]
@@ -48,3 +54,5 @@ exports.insertComment = (article_id, commentData) => {
         return result.rows[0];
     })
 }
+
+

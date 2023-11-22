@@ -1,4 +1,5 @@
-const db = require("../db/connection.js")
+
+const db = require("../db/connection.js");
 const format = require("pg-format");
 
 exports.checkExists = (table, column, value) => {
@@ -8,4 +9,7 @@ exports.checkExists = (table, column, value) => {
       return Promise.reject({ status: 404, msg: "not found" });
     }
   });
+
 };
+
+
