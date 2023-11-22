@@ -133,8 +133,6 @@ describe("/api/articles", () => {
 
 })
 
-
-
 describe("/api/articles/:article_id/comments", () => {
   test("GET 200: sends the comments with the specfied article_id", () => {
     return request(app)
@@ -185,3 +183,92 @@ describe("/api/articles/:article_id/comments", () => {
    })
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("POST 201: Inserts new comment with specified article_id", () => {
+    const newMessage = {
+      username: 'butter_bridge', 
+      body: 'Great Article!'
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newMessage)
+    .expect(201)
+    .then((response) => {
+      expect(response.body.comment).toMatchObject({
+        comment_id: 19, 
+        body: 'Great Article!', 
+        article_id: 1, 
+        author: 'butter_bridge',
+        votes: 0 
+      })
+    })
+  })
+
+  test("POST 400: No body given", () => {
+    const newMessage = {}
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newMessage)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('invalid request body')
+    })
+  })
+
+  test("POST 404: article_id doesnt exist", () => {
+    const newMessage = {
+      username: 'butter_bridge', 
+      body: 'Great Article!'
+    }
+    return request(app)
+    .post("/api/articles/999/comments")
+    .send(newMessage)
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found')
+    })
+  })
+
+  test("POST 404: invalid article_id", () => {
+    const newMessage = {
+      username: 'butter_bridge', 
+      body: 'Great Article!'
+    }
+    return request(app)
+    .post("/api/articles/bannana/comments")
+    .send(newMessage)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('Invalid Param')
+    })
+  })
+
+  test("POST 400: incomplete body", () => {
+    const newMessage = {
+      username: 'butter_bridge', 
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newMessage)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('invalid request body')
+    })
+  })
+
+  test("POST 404: username doesnt exist", () => {
+    const newMessage = {
+      username: 'rah',
+      body: 'Great Article!'
+
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newMessage)
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found')
+    })
+  })
+})

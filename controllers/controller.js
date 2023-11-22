@@ -1,5 +1,5 @@
 
-const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId} = require("../models/model.js");
+const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment} = require("../models/model.js");
 const {checkExists} = require('./utils.js');
 
 
@@ -50,5 +50,18 @@ exports.getArticles = (req,res,next) => {
     .catch((err) => {
         next(err);
     })
+}
+
+exports.postComment = (req,res,next) => {
+    const article_id = req.params.article_id;
+    const commentData = req.body;
+    const commentPromises = [checkExists("articles", "article_id", article_id), checkExists("users", "username", commentData.username),insertComment(article_id, commentData)];
+
+    Promise.all(commentPromises)
+    .then((resolvedPromises) => {
+      const comment = resolvedPromises[2];
+      res.status(201).send({ comment });
+    })
+    .catch(next);
 
 }
