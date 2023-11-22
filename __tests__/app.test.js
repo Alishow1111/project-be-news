@@ -152,4 +152,25 @@ describe("PATCH /api/articles/:article_id", () => {
       })
     })
   })
+
+  test("PATCH 404: artile_id is valid but doesnt exist", () => {
+    return request(app)
+    .patch("/api/articles/1")
+    .send({ inc_votes : 999})
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe("article_id doesnt exist");
+    })
+  })
+
+  test("PATCH 400: No data in body", () => {
+    return request(app)
+    .patch("/api/articles/1")
+    .send({})
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe("no data in body");
+    })
+  })
+
 })

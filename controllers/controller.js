@@ -39,8 +39,8 @@ exports.getArticles = (req,res,next) => {
 
 exports.patchArticle = (req,res,next) => {
     const article_id = req.params.article_id;
-    const increment = req.body.inc_votes;
-    updateArticle(article_id, increment).then((article) => {
+    const data = req.body;
+    updateArticle(article_id, data).then((article) => {
         res.status(200).send({article});
     })
     .catch((err) => {
