@@ -212,7 +212,63 @@ describe("POST /api/articles/:article_id/comments", () => {
     .send(newMessage)
     .expect(400)
     .then((response) => {
-      expect(response.body.msg).toBe('no request body')
+      expect(response.body.msg).toBe('invalid request body')
+    })
+  })
+
+  test("POST 404: article_id doesnt exist", () => {
+    const newMessage = {
+      username: 'butter_bridge', 
+      body: 'Great Article!'
+    }
+    return request(app)
+    .post("/api/articles/999/comments")
+    .send(newMessage)
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found')
+    })
+  })
+
+  test("POST 404: invalid article_id", () => {
+    const newMessage = {
+      username: 'butter_bridge', 
+      body: 'Great Article!'
+    }
+    return request(app)
+    .post("/api/articles/bannana/comments")
+    .send(newMessage)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('Invalid Param')
+    })
+  })
+
+  test("POST 400: incomplete body", () => {
+    const newMessage = {
+      username: 'butter_bridge', 
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newMessage)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('invalid request body')
+    })
+  })
+
+  test("POST 404: username doesnt exist", () => {
+    const newMessage = {
+      username: 'rah',
+      body: 'Great Article!'
+
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newMessage)
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found')
     })
   })
 })

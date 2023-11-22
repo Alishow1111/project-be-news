@@ -47,8 +47,8 @@ exports.fetchCommentsByArticleId = (article_id) => {
 exports.insertComment = (article_id, commentData) => {
     const currentDate = new Date(Date.now());
     const dataArray = [commentData.body, article_id, commentData.username, 0, currentDate]
-    if (!Object.keys(commentData).length){
-        return Promise.reject({ status: 400, msg: "no request body" });
+    if (Object.keys(commentData).length !== 2){
+        return Promise.reject({ status: 400, msg: "invalid request body" });
     }
     return db.query("INSERT INTO comments (body, article_id, author, votes, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *;",dataArray).then((result) => {
         return result.rows[0];

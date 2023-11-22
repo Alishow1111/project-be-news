@@ -55,11 +55,11 @@ exports.getArticles = (req,res,next) => {
 exports.postComment = (req,res,next) => {
     const article_id = req.params.article_id;
     const commentData = req.body;
-    const commentPromises = [insertComment(article_id, commentData), checkExists("articles", "article_id", article_id)];
+    const commentPromises = [checkExists("articles", "article_id", article_id), checkExists("users", "username", commentData.username),insertComment(article_id, commentData)];
 
     Promise.all(commentPromises)
     .then((resolvedPromises) => {
-      const comment = resolvedPromises[0];
+      const comment = resolvedPromises[2];
       res.status(201).send({ comment });
     })
     .catch(next);
