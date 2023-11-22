@@ -169,10 +169,19 @@ describe("/api/articles/:article_id/comments", () => {
 
   test("If article_id doesn't exist, expect not found returned back", () => {
     return request(app)
-    .get("/api/articles/20/comments")
+    .get("/api/articles/999/comments")
     .expect(404)
     .then((response) => {
       expect(response.body.msg).toBe('not found');
+   })
+  });
+
+  test("If a invalid article_id is entered", () => {
+    return request(app)
+    .get("/api/articles/bannana/comments")
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('Invalid Param');
    })
   });
 });
