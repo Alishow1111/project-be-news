@@ -1,4 +1,8 @@
-const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, updateArticle} = require("../models/model.js");
+
+const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment, updateArticle} = require("../models/model.js");
+const {checkExists} = require('./utils.js');
+
+
 
 exports.getTopics = (req,res,next) => {
     fetchTopics().then((topics) => {
@@ -28,6 +32,18 @@ exports.getArticleById = (req,res,next) => {
     });
 }
 
+
+exports.getCommentsByArticleId = (req,res,next) => {
+    const article_id = req.params.article_id;
+
+    const commentPromises = [fetchCommentsByArticleId(article_id), checkExists("articles", "article_id", article_id)];
+    Promise.all(commentPromises).then((resolvedPromises) => {
+        const comments = resolvedPromises[0];
+        res.status(200).send({comments})
+    })
+    .catch(next)
+}
+
 exports.getArticles = (req,res,next) => {
     fetchArticles().then((articles) => {
         res.status(200).send({articles});
@@ -35,6 +51,21 @@ exports.getArticles = (req,res,next) => {
     .catch((err) => {
         next(err);
     })
+}
+
+
+exports.postComment = (req,res,next) => {
+    const article_id = req.params.article_id;
+    const commentData = req.body;
+    const commentPromises = [checkExists("articles", "article_id", article_id), checkExists("users", "username", commentData.username),insertComment(article_id, commentData)];
+
+    Promise.all(commentPromises)
+    .then((resolvedPromises) => {
+      const comment = resolvedPromises[2];
+      res.status(201).send({ comment });
+    })
+    .catch(next);
+
 }
 
 exports.patchArticle = (req,res,next) => {

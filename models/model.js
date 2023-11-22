@@ -38,6 +38,24 @@ exports.fetchArticles = () => {
     })
 }
 
+exports.fetchCommentsByArticleId = (article_id) => {
+    return db.query("SELECT * FROM comments WHERE article_id = $1", [article_id]).then((result) => {
+        return result.rows;
+    })
+}
+
+exports.insertComment = (article_id, commentData) => {
+    const currentDate = new Date(Date.now());
+    const dataArray = [commentData.body, article_id, commentData.username, 0, currentDate]
+    if (Object.keys(commentData).length !== 2){
+        return Promise.reject({ status: 400, msg: "invalid request body" });
+    }
+    return db.query("INSERT INTO comments (body, article_id, author, votes, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *;",dataArray).then((result) => {
+        return result.rows[0];
+    })
+}
+
+
 exports.updateArticle = (article_id, data) => {
     return db.query("UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;", [article_id, data.inc_votes]).then((result) => {
         if (!result.rows.length){
@@ -52,3 +70,8 @@ exports.updateArticle = (article_id, data) => {
         }
     });
 }
+
+
+
+
+
