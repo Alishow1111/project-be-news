@@ -37,3 +37,9 @@ exports.fetchArticles = () => {
         return result.rows;
     })
 }
+
+exports.updateArticle = (article_id, increment) => {
+    return db.query("UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;", [article_id, increment]).then((result) => {
+        return result.rows[0];
+    });
+}
