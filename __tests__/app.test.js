@@ -163,6 +163,16 @@ describe("PATCH /api/articles/:article_id", () => {
     })
   })
 
+  test("PATCH 404: artile_id is invalid", () => {
+    return request(app)
+    .patch("/api/articles/bannana")
+    .send({ inc_votes : 999})
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe("Invalid Param");
+    })
+  })
+
   test("PATCH 400: No data in body", () => {
     return request(app)
     .patch("/api/articles/1")
