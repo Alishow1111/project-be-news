@@ -1,6 +1,7 @@
 
-const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment} = require("../models/model.js");
+const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment, updateArticle} = require("../models/model.js");
 const {checkExists} = require('./utils.js');
+
 
 
 exports.getTopics = (req,res,next) => {
@@ -52,6 +53,7 @@ exports.getArticles = (req,res,next) => {
     })
 }
 
+
 exports.postComment = (req,res,next) => {
     const article_id = req.params.article_id;
     const commentData = req.body;
@@ -64,4 +66,15 @@ exports.postComment = (req,res,next) => {
     })
     .catch(next);
 
+}
+
+exports.patchArticle = (req,res,next) => {
+    const article_id = req.params.article_id;
+    const data = req.body;
+    updateArticle(article_id, data).then((article) => {
+        res.status(200).send({article});
+    })
+    .catch((err) => {
+        next(err);
+    })
 }

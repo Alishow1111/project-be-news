@@ -272,3 +272,66 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
   })
 })
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("PATCH 200: votes for article will be updated", () => {
+    return request(app)
+    .patch("/api/articles/1")
+    .send({ inc_votes : 1 })
+    .expect(200)
+    .then((response) => {
+      expect(response.body.article).toMatchObject({
+        article_id: 1,
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: "2020-07-09T20:11:00.000Z",
+        votes: 101,
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      })
+    })
+  })
+
+  test("PATCH 404: article_id is valid but doesnt exist", () => {
+    return request(app)
+    .patch("/api/articles/1")
+    .send({ inc_votes : 999})
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe("article_id doesnt exist");
+    })
+  })
+
+  test("PATCH 404: article_id is invalid", () => {
+    return request(app)
+    .patch("/api/articles/bannana")
+    .send({ inc_votes : 999})
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe("Invalid Param");
+    })
+  })
+
+  test("PATCH 400: No data in body", () => {
+    return request(app)
+    .patch("/api/articles/1")
+    .send({})
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe("no data in body");
+    })
+  })
+
+  test("PATCH 400: Invalid data in body", () => {
+    return request(app)
+    .patch("/api/articles/1")
+    .send({ inc_votes : "notanumber"})
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe("Invalid Param");
+    })
+  })
+
+})
