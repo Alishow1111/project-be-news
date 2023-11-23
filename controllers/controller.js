@@ -46,7 +46,8 @@ exports.getCommentsByArticleId = (req,res,next) => {
 }
 
 exports.getArticles = (req,res,next) => {
-    fetchArticles().then((articles) => {
+    const topic = req.query.topic;
+    fetchArticles(topic).then((articles) => {
         res.status(200).send({articles});
     })
     .catch((err) => {

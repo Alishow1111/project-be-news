@@ -131,6 +131,34 @@ describe("/api/articles", () => {
       });
   });
 
+  test("GET 200: If a query is added to the path, only articles with that specified topic are found", () => {
+    return request(app)
+    .get("/api/articles?topic=cats")
+    .expect(200)
+    .then((response) => {
+      expect(response.body.articles).toMatchObject([
+        {
+          article_id: 5,
+          title: "UNCOVERED: catspiracy to bring down democracy",
+          topic: "cats",
+          author: "rogersop",
+          created_at: "2020-08-03T13:14:00.000Z",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        } 
+      ])
+    })
+  })
+
+  test("GET 400: topic doesnt exist", () => {
+    return request(app)
+    .get("/api/articles?topic=dragons")
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('topic doesnt exist')
+    })
+  })
+
 })
 
 describe("/api/articles/:article_id/comments", () => {
