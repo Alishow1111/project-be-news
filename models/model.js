@@ -75,6 +75,12 @@ exports.updateArticle = (article_id, data) => {
     });
 }
 
+exports.fetchUsers = () => {
+    return db.query("SELECT * FROM Users;").then((result) => {
+        return result.rows;
+    })
+}
+
 
 
 
