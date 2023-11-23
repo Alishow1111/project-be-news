@@ -60,3 +60,22 @@ exports.removeComment = (comment_id) => {
 }
 
 
+exports.updateArticle = (article_id, data) => {
+    return db.query("UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;", [article_id, data.inc_votes]).then((result) => {
+        if (!result.rows.length){
+            if (!data.inc_votes){
+                return Promise.reject({status: 400, msg: 'no data in body'}) 
+            }
+
+            return Promise.reject({status: 404, msg: 'article_id doesnt exist'})
+        }
+        else{
+            return result.rows[0];
+        }
+    });
+}
+
+
+
+
+
