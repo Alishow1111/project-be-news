@@ -1,5 +1,5 @@
 
-const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment, updateArticle} = require("../models/model.js");
+const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment, updateArticle, removeComment} = require("../models/model.js");
 const {checkExists} = require('./utils.js');
 
 
@@ -77,4 +77,15 @@ exports.patchArticle = (req,res,next) => {
     .catch((err) => {
         next(err);
     })
+
+}
+
+exports.deleteComment = (req,res,next) => {
+    const comment_id = req.params.comment_id;
+    const commentPromises = [checkExists("comments", "comment_id", comment_id), removeComment(comment_id)];
+    Promise.all(commentPromises)
+    .then(() => {
+        res.status(204).send()
+    })
+    .catch(next)
 }

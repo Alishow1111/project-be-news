@@ -335,3 +335,30 @@ describe("PATCH /api/articles/:article_id", () => {
   })
 
 })
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("DELETE 204: deletes comment with the specified comment_id", () => {
+    return request(app)
+    .delete("/api/comments/1")
+    .expect(204)
+  })
+
+  test("DELETE 404: given a valid comment_id but doesnt exist", () => {
+    return request(app)
+    .delete("/api/comments/999")
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found')
+    })
+  })
+
+  test("DELETE 400: given a invalid comment_id", () => {
+    return request(app)
+    .delete("/api/comments/apple")
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('Invalid Param')
+    })
+  })
+})
+
