@@ -1,5 +1,5 @@
 
-const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment, updateArticle} = require("../models/model.js");
+const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment, updateArticle, fetchUsers} = require("../models/model.js");
 const {checkExists} = require('./utils.js');
 
 
@@ -77,4 +77,11 @@ exports.patchArticle = (req,res,next) => {
     .catch((err) => {
         next(err);
     })
+}
+
+exports.getUsers = (req,res,next) => {
+    fetchUsers().then((users) => {
+        res.status(200).send({users});
+    })
+    .catch(next)
 }
