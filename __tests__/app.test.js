@@ -294,7 +294,7 @@ describe("PATCH /api/articles/:article_id", () => {
     })
   })
 
-  test("PATCH 404: artile_id is valid but doesnt exist", () => {
+  test("PATCH 404: article_id is valid but doesnt exist", () => {
     return request(app)
     .patch("/api/articles/1")
     .send({ inc_votes : 999})
@@ -304,7 +304,7 @@ describe("PATCH /api/articles/:article_id", () => {
     })
   })
 
-  test("PATCH 404: artile_id is invalid", () => {
+  test("PATCH 404: article_id is invalid", () => {
     return request(app)
     .patch("/api/articles/bannana")
     .send({ inc_votes : 999})
@@ -321,6 +321,16 @@ describe("PATCH /api/articles/:article_id", () => {
     .expect(400)
     .then((response) => {
       expect(response.body.msg).toBe("no data in body");
+    })
+  })
+
+  test("PATCH 400: Invalid data in body", () => {
+    return request(app)
+    .patch("/api/articles/1")
+    .send({ inc_votes : "notanumber"})
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe("Invalid Param");
     })
   })
 
