@@ -1,5 +1,5 @@
 
-const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment} = require("../models/model.js");
+const {fetchTopics, fetchEndpoints, fetchArticleById, fetchArticles, fetchCommentsByArticleId, insertComment, removeComment} = require("../models/model.js");
 const {checkExists} = require('./utils.js');
 
 
@@ -64,4 +64,12 @@ exports.postComment = (req,res,next) => {
     })
     .catch(next);
 
+}
+
+exports.deleteComment = (req,res,next) => {
+    const comment_id = req.params.comment_id;
+    removeComment(comment_id).then(() => {
+        res.status(204).send()
+    })
+    .catch(next)
 }
