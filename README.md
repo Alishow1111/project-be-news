@@ -18,6 +18,11 @@ In your terminal enter the command:
 npm run install
 ```
 
+## Setup .env files
+Create three .env files (.env.test, .env.development).
+
+In both files add PGDATABASE=, with the respective names of the databases found in setup.sql.
+
 ## Seed Database
 Firstly, Setup up the Database:
 
@@ -38,11 +43,6 @@ In your terminal, enter the command:
 ```
 npm run test
 ```
-
-## Setup .env files
-Create three .env files (.env.test, .env.development).
-
-In both files add PGDATABASE=, with the respective names of the databases found in setup.sql.
 
 ## Minimum versions for dependancies
 <b>Node.js</b>: 20.8.1
