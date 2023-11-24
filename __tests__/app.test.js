@@ -100,6 +100,17 @@ describe("/api/articles/:article_id", () => {
             expect(response.body.msg).toBe("Invalid Param");
           });
     });
+
+    test("GET 200: returns correct comment_count", () => {
+      return request(app)
+        .get("/api/articles/5")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.article.comment_count).toBe('2');
+        });
+  });
+
+
 });
 
 describe("/api/articles", () => {
