@@ -153,9 +153,27 @@ describe("/api/articles", () => {
   test("GET 400: topic doesnt exist", () => {
     return request(app)
     .get("/api/articles?topic=dragons")
-    .expect(400)
+    .expect(404)
     .then((response) => {
-      expect(response.body.msg).toBe('topic doesnt exist')
+      expect(response.body.msg).toBe('not found')
+    })
+  })
+
+  test("GET 200: return multiple article objects", () => {
+    return request(app)
+    .get("/api/articles?topic=mitch")
+    .expect(200)
+    .then((response) => {
+      expect(response.body.articles.length).toBe(12)
+    })
+  })
+
+  test("GET 200: topic exists but no articles with that topic exist", () => {
+    return request(app)
+    .get("/api/articles?topic=paper")
+    .expect(200)
+    .then((response) => {
+      expect(response.body.articles).toEqual([]);
     })
   })
 
