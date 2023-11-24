@@ -46,12 +46,23 @@ exports.getCommentsByArticleId = (req,res,next) => {
 }
 
 exports.getArticles = (req,res,next) => {
-    fetchArticles().then((articles) => {
-        res.status(200).send({articles});
-    })
-    .catch((err) => {
-        next(err);
-    })
+    const topic = req.query.topic;
+    if (topic){
+        const articlePromises = [checkExists("topics", "slug", topic), fetchArticles(topic)];
+        Promise.all(articlePromises).then((resolvedPromises) => {
+            const articles = resolvedPromises[1];
+            res.status(200).send({articles})
+        })
+        .catch(next)
+    }
+    else{
+        fetchArticles().then((articles) => {
+            res.status(200).send({articles});
+        })
+        .catch((err) => {
+            next(err);
+        })    
+    }
 }
 
 

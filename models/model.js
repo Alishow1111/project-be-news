@@ -1,5 +1,6 @@
 const db = require("../db/connection.js");
 const fs = require('fs/promises')
+const checkExists = require('../controllers/utils.js')
 
 exports.fetchTopics = () => {
     return db.query("SELECT * FROM topics").then((result) => {
@@ -29,13 +30,21 @@ exports.fetchArticleById = (article_id) => {
     })
 }
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (topic) => {
 
-    const query = "SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, count(comments.article_id) as comment_count from articles left join comments on (articles.article_id = comments.article_id) GROUP BY articles.article_id ORDER BY articles.created_at DESC;"
+    if (!topic){
+        const query = "SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, count(comments.article_id) as comment_count from articles left join comments on (articles.article_id = comments.article_id) GROUP BY articles.article_id ORDER BY articles.created_at DESC;"
+        return db.query(query).then((result) => {
+            return result.rows;
+        })
+    }
 
-    return db.query(query).then((result) => {
+    
+    return db.query("SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, count(comments.article_id) as comment_count from articles left join comments on (articles.article_id = comments.article_id) WHERE topic=$1 GROUP BY articles.article_id ORDER BY articles.created_at DESC;", [topic]).then((result) => {
         return result.rows;
     })
+
+
 }
 
 exports.fetchCommentsByArticleId = (article_id) => {
